@@ -163,7 +163,7 @@ function AddMedicine() {
     }
 
     try {
-      await axios.post("https://api.5ytechno.com/purchase", formData);
+      await axios.post("https://api.5ytechnodemo.com/purchase", formData);
       setPopupType("success");
       setShowPopup(true);
       console.log("Form Submitted!");

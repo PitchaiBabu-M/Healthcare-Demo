@@ -54,7 +54,7 @@ const Purchase = () => {
 
   const fetchpurchaseData = async () => {
     try {
-      const response = await axios.get("https://api.5ytechno.com/allpurchase", {
+      const response = await axios.get("https://api.5ytechnodemo.com/allpurchase", {
         params: { medicinename: searchQuery },
       });
 
@@ -77,7 +77,7 @@ const Purchase = () => {
     const fetchpurchaseData = async () => {
       try {
         const response = await axios.get(
-          "https://api.5ytechno.com/allpurchase"
+          "https://api.5ytechnodemo.com/allpurchase"
         );
         setMedicineData(response.data);
       } catch (error) {

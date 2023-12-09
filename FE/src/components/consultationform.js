@@ -100,22 +100,10 @@ const ConsultationForm = () => {
 
     const emptyFields = requiredFields.filter(field => !formData[field]);
   if (emptyFields.length > 0) {
-    // Highlight empty fields
     setHighlightedFields(emptyFields);
     return;
   }
-  
-// const isAnyFieldEmpty = requiredFields.some((field) => !formData[field]);
-//     const isChargeFieldFilled =
-//       !!formData.clinicCharge || !!formData.consultantCharge;
 
-//     if (isAnyFieldEmpty && !isChargeFieldFilled) {
-//       setShowAlert(true);
-//       setTimeout(() => {
-//         setShowAlert(false);
-//       }, 2000);
-//       return;
-//     }
     const totalCharge =
       parseInt(formData.consultantCharge || 0, 10) +
       parseInt(formData.clinicCharge || 0, 10);
@@ -125,7 +113,6 @@ const ConsultationForm = () => {
     clearAlert();
   };
 
- 
 
   const calculateAge = (dob) => {
     const today = new Date();
