@@ -40,7 +40,7 @@ const StockDetailsPage1 = () => {
 
   const fetchStockData = async () => {
     try {
-      const response = await axios.get("https://api.5ytechnodemo.com/stock", {
+      const response = await axios.get("https://apidemo.5ytechno.com/stock", {
         params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 
@@ -66,7 +66,7 @@ const StockDetailsPage1 = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await axios.get("https://api.5ytechnodemo.com/stock");
+        const response = await axios.get("https://apidemo.5ytechno.com/stock");
         setMedicineData(response.data);
       } catch (error) {
         setError("Error fetching data");

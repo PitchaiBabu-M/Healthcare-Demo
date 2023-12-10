@@ -53,7 +53,7 @@ const StockDetailsPage = () => {
 
   const fetchStockData = async () => {
     try {
-        const response = await axios.get("https://api.5ytechnodemo.com/stock", {
+        const response = await axios.get("https://apidemo.5ytechno.com/stock", {
                     params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 
@@ -79,7 +79,7 @@ const StockDetailsPage = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await axios.get("https://api.5ytechnodemo.com/stock");
+        const response = await axios.get("https://apidemo.5ytechno.com/stock");
         setMedicineData(response.data);
       } catch (error) {
         setError("Error fetching data");
@@ -121,7 +121,7 @@ const StockDetailsPage = () => {
   const handleSaveEdit = async (id, updatedData) => {
     try {
       const response = await axios.put(
-        `https://api.5ytechnodemo.com/stock/update/${id}`,
+        `https://apidemo.5ytechno.com/stock/update/${id}`,
         updatedData
       );
 
@@ -151,7 +151,7 @@ const StockDetailsPage = () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         const response = await axios.delete(
-          `https://api.5ytechnodemo.com/stock/delete/${id}`
+          `https://apidemo.5ytechno.com/stock/delete/${id}`
         );
         console.log("Delete response:", response.data);
 
