@@ -88,9 +88,11 @@ function Billing() {
     }
   }, [cashGiven, grandtotal]);
 
+  // const currentDateFormatted = moment().format('MMMM D, YYYY');
+
   const currentDateFormatted = new Date().toLocaleDateString("en-GB", {
-    day: "numeric",
     month: "numeric",
+    day: "numeric",
     year: "numeric",
   });
 
@@ -113,7 +115,7 @@ function Billing() {
 
     try {
       const response = await axios.get(
-        `https://api.5ytechnodemo.com/quantity?medicinename=${medicinename}&dosage=${dosage}`
+        `https://apidemo.5ytechno.com/quantity?medicinename=${medicinename}&dosage=${dosage}`
       );
       const availableQuantity = response.data.availableQuantity;
 
@@ -197,7 +199,7 @@ function Billing() {
     try {
       const { medicinename, dosage } = extractMedicineInfo(selectedSuggestion);
       const mrpResponse = await axios.get(
-        `https://api.5ytechnodemo.com/getMRP?medicinename=${medicinename}&dosage=${dosage}`
+        `https://apidemo.5ytechno.com/getMRP?medicinename=${medicinename}&dosage=${dosage}`
       );
       const mrp = mrpResponse.data.mrp;
       console.log("mrp", mrp);
@@ -221,7 +223,7 @@ function Billing() {
 
     try {
       const response = await axios.get(
-        `https://api.5ytechnodemo.com/suggestions?partialName=${inputValue}`
+        `https://apidemo.5ytechno.com/suggestions?partialName=${inputValue}`
       );
       const fetchedSuggestions = response.data.suggestions;
       setSuggestions(fetchedSuggestions);
@@ -248,7 +250,7 @@ function Billing() {
         if (event.target.id === `medicinename${id}`) {
           try {
             const response = await axios.get(
-              `https://api.5ytechnodemo.com/allstock?medicinename=${medicinename}&dosage=${dosage}`
+              `https://apidemo.5ytechno.com/allstock?medicinename=${medicinename}&dosage=${dosage}`
             );
             const expired = response.data.expired;
 
@@ -315,14 +317,15 @@ function Billing() {
   };
 
   const handleDiscountBlur = () => {
-    const discountValue =
-      typeof discount === "number"
-        ? discount
-        : parseFloat(discount.replace(/[^\d.]/g, 0));
-
-    const formattedValue = discountValue.toFixed(2);
-    setDiscountTotal(formattedValue);
+    const discountValue = parseFloat(discount);
+    if (isNaN(discountValue)) {
+      setDiscountTotal("0");
+    } else {
+      const formattedValue = discountValue.toFixed(2);
+      setDiscountTotal(formattedValue);
+    }
   };
+
   const handleCountryCodeChange = (e) => {
     setCountryCode(e.target.value);
   };
@@ -480,7 +483,7 @@ function Billing() {
 
     try {
       const response = await axios.post(
-        "https://api.5ytechnodemo.com/billing",
+        "https://apidemo.5ytechno.com/billing",
         billingData
       );
       const generatedInvoiceNumber = response.data.invoicenumber;
@@ -813,7 +816,7 @@ function Billing() {
                         <input
                           id="discount"
                           className="border-0 text-start p-1"
-                          type="number"
+                          type="text"
                           value={discount}
                           onChange={handleDiscountChange}
                           onBlur={handleDiscountBlur}

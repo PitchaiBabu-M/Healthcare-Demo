@@ -23,19 +23,19 @@ const db = mysql.createPool({
   host: "fivewhyrds.ctxjvxl0k0dq.us-east-1.rds.amazonaws.com",
   user: "fivewhyadmin",
   password: "Yayaya#143",
-  database: "Alagar_Clinic",
+  database: "Alagar_Clinic_Demo",
 });
 
 const createUsersTableQuery = `
   CREATE TABLE IF NOT EXISTS User_Inventory_Demo (
-    user_id  VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(512) PRIMARY KEY,
     user_first_name VARCHAR(255),
     user_last_name VARCHAR(255),
     user_email VARCHAR(255) UNIQUE,
     user_mobile_number VARCHAR(20),
     user_role VARCHAR(20),
     user_password VARCHAR(255),
-    user_token VARCHAR(255),
+    user_token VARCHAR(512),
     user_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP )
 `;
 
@@ -120,6 +120,7 @@ const privateKey =
         const enpPassword = await bcrypt.hash(reqData.user_password, 10);
         const token = jwt.sign(reqData, privateKey);
         const user = "userid-" + uuid();
+        console.log("User ID length:", user.length);
 
         const istTimestamp = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
   

@@ -53,7 +53,7 @@ const StockDetailsPage = () => {
 
   const fetchStockData = async () => {
     try {
-        const response = await axios.get("https://api.5ytechnodemo.com/stock", {
+        const response = await axios.get("https://apidemo.5ytechno.com/stock", {
                     params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 
@@ -79,7 +79,7 @@ const StockDetailsPage = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await axios.get("https://api.5ytechnodemo.com/stock");
+        const response = await axios.get("https://apidemo.5ytechno.com/stock");
         setMedicineData(response.data);
       } catch (error) {
         setError("Error fetching data");
@@ -121,7 +121,7 @@ const StockDetailsPage = () => {
   const handleSaveEdit = async (id, updatedData) => {
     try {
       const response = await axios.put(
-        `https://api.5ytechnodemo.com/stock/update/${id}`,
+        `https://apidemo.5ytechno.com/stock/update/${id}`,
         updatedData
       );
 
@@ -151,7 +151,7 @@ const StockDetailsPage = () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         const response = await axios.delete(
-          `https://api.5ytechnodemo.com/stock/delete/${id}`
+          `https://apidemo.5ytechno.com/stock/delete/${id}`
         );
         console.log("Delete response:", response.data);
 
@@ -245,20 +245,20 @@ const StockDetailsPage = () => {
     filteredData.forEach((item) => {
       const formattedDate = item.purchasedate
         ? moment(item.purchasedate).format("YYYY-MM-DD")
-        : "N/A";
+        : "0";
 
       const dataRow = worksheet.addRow({
         purchasedate: formattedDate,
-        medicinename: item.medicinename || "N/A",
-        dosage: item.dosage || "N/A",
-        brandname: item.brandname || "N/A",
-        purchaseprice: item.purchaseprice || "N/A",
+        medicinename: item.medicinename || "0",
+        dosage: item.dosage || "0",
+        brandname: item.brandname || "0",
+        purchaseprice: item.purchaseprice || "0",
 
-        mrp: item.mrp || "N/A",
-        totalqty: item.totalqty || "N/A",
+        mrp: item.mrp || "0",
+        totalqty: item.totalqty || "0",
         expirydate: item.expirydate
           ? moment(item.expirydate).format("YYYY-MM-DD")
-          : "N/A",
+          : "0",
       });
 
       dataRow.alignment = { horizontal: "center" };
@@ -337,17 +337,17 @@ const StockDetailsPage = () => {
       const firstPageBodyData = firstPageData.map((currentData) => [
         currentData.purchasedate
           ? moment(currentData.purchasedate).format("YYYY-MM-DD")
-          : "N/A",
-        currentData.medicinename || "N/A",
-        currentData.dosage || "N/A",
-        currentData.brandname || "N/A",
-        currentData.purchaseprice || "N/A",
+          : "0",
+        currentData.medicinename || "0",
+        currentData.dosage || "0",
+        currentData.brandname || "0",
+        currentData.purchaseprice || "0",
 
-        currentData.mrp || "N/A",
-        currentData.totalqty || "N/A",
+        currentData.mrp || "0",
+        currentData.totalqty || "0",
         currentData.expirydate
           ? moment(currentData.expirydate).format("YYYY-MM-DD")
-          : "N/A",
+          : "0",
       ]);
 
       pdf.autoTable({
@@ -403,17 +403,17 @@ const StockDetailsPage = () => {
         const bodyData = currentPageData.map((currentData) => [
           currentData.purchasedate
             ? moment(currentData.purchasedate).format("YYYY-MM-DD")
-            : "N/A",
-          currentData.medicinename || "N/A",
-          currentData.dosage || "N/A",
-          currentData.brandname || "N/A",
-          currentData.purchaseprice || "N/A",
+            : "0",
+          currentData.medicinename || "0",
+          currentData.dosage || "0",
+          currentData.brandname || "0",
+          currentData.purchaseprice || "0",
 
-          currentData.mrp || "N/A",
-          currentData.totalqty || "N/A",
+          currentData.mrp || "0",
+          currentData.totalqty || "0",
           currentData.expirydate
             ? moment(currentData.expirydate).format("YYYY-MM-DD")
-            : "N/A",
+            : "0",
         ]);
 
         pdf.autoTable({
@@ -579,13 +579,13 @@ const StockDetailsPage = () => {
                           <td style={tdStyle}>
                             {item.purchasedate
                               ? moment(item.purchasedate).format("YYYY-MM-DD")
-                              : "N/A"}
+                              : "0"}
                           </td>
 
                           <td style={{ ...tdStyle, textAlign: "left" }}>
-                            {item.medicinename || "N/A"}
+                            {item.medicinename || "0"}
                           </td>
-                          <td style={tdStyle}>{item.dosage || "N/A"}</td>
+                          <td style={tdStyle}>{item.dosage || "0"}</td>
                           <td style={tdStyle}>
                             {editMode === item.id ? (
                               <input
@@ -599,7 +599,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.brandname || "N/A"
+                              item.brandname || "0"
                             )}
                           </td>
                           <td style={tdStyle}>
@@ -615,7 +615,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.purchaseprice || "N/A"
+                              item.purchaseprice || "0"
                             )}
                           </td>
 
@@ -629,7 +629,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.mrp || "N/A"
+                              item.mrp || "0"
                             )}
                           </td>
                           <td style={tdStyle}>
@@ -645,7 +645,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.totalqty || "N/A"
+                              item.totalqty || "0"
                             )}
                           </td>
                           <td style={tdStyle}>
@@ -663,7 +663,7 @@ const StockDetailsPage = () => {
                             ) : item.expirydate ? (
                               moment(item.expirydate).format("YYYY-MM-DD")
                             ) : (
-                              "N/A"
+                              "0"
                             )}
                           </td>
                           <td style={tdStyle}>

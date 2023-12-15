@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://api.5ytechnodemo.com/login",
+        "https://apidemo.5ytechno.com/login",
         loginData
       );
       console.log(response.data);
