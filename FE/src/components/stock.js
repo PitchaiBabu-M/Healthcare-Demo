@@ -54,7 +54,7 @@ const StockDetailsPage = () => {
   const fetchStockData = async () => {
     try {
         const response = await axios.get("https://apidemo.5ytechno.com/stock", {
-                    params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
+              params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 
       setMedicineData(response.data);
@@ -120,6 +120,7 @@ const StockDetailsPage = () => {
 
   const handleSaveEdit = async (id, updatedData) => {
     try {
+
       const response = await axios.put(
         `https://apidemo.5ytechno.com/stock/update/${id}`,
         updatedData
@@ -172,21 +173,34 @@ const StockDetailsPage = () => {
   };
 
   const handleEdit = (id) => {
-    const editedItem = medicineData.find((item) => item.id === id);
-    setEditMode(id);
-    setEditedData({
-      ...editedItem,
-      originalData: { ...editedItem },
-      lastEditTimestamp: new Date(),
-    });
+    const index = medicineData.findIndex((item) => item.id === id);
+  
+    if (index !== -1) {
+      setEditMode(id);
+  
+      setEditedData((prevData) => {
+        const updatedMedicineData = [...medicineData];
+        const editedItem = { ...updatedMedicineData[index] };
+  
+        return {
+          ...editedItem,
+          originalData: { ...editedItem },
+          lastEditTimestamp: new Date(),
+        };
+      });
+    }
   };
-
+  
+  
   const isRowEdited = (id) => editedRows.some((row) => row.id === id);
 
   const handleCancelEdit = () => {
     setEditMode(null);
     setEditedData({});
   };
+
+
+
 
   const handleChangeEditData = (name, value) => {
     setEditedData((prevData) => ({
@@ -195,7 +209,7 @@ const StockDetailsPage = () => {
       lastEditTimestamp: new Date(),
     }));
   };
-
+  
   const exportToExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("StockData");
@@ -245,20 +259,20 @@ const StockDetailsPage = () => {
     filteredData.forEach((item) => {
       const formattedDate = item.purchasedate
         ? moment(item.purchasedate).format("YYYY-MM-DD")
-        : "0";
+        : "N/A";
 
       const dataRow = worksheet.addRow({
         purchasedate: formattedDate,
-        medicinename: item.medicinename || "0",
-        dosage: item.dosage || "0",
-        brandname: item.brandname || "0",
-        purchaseprice: item.purchaseprice || "0",
+        medicinename: item.medicinename || "N/A",
+        dosage: item.dosage || "N/A",
+        brandname: item.brandname || "N/A",
+        purchaseprice: item.purchaseprice || "N/A",
 
-        mrp: item.mrp || "0",
-        totalqty: item.totalqty || "0",
+        mrp: item.mrp || "N/A",
+        totalqty: item.totalqty || "N/A",
         expirydate: item.expirydate
           ? moment(item.expirydate).format("YYYY-MM-DD")
-          : "0",
+          : "N/A",
       });
 
       dataRow.alignment = { horizontal: "center" };
@@ -337,17 +351,17 @@ const StockDetailsPage = () => {
       const firstPageBodyData = firstPageData.map((currentData) => [
         currentData.purchasedate
           ? moment(currentData.purchasedate).format("YYYY-MM-DD")
-          : "0",
-        currentData.medicinename || "0",
-        currentData.dosage || "0",
-        currentData.brandname || "0",
-        currentData.purchaseprice || "0",
+          : "N/A",
+        currentData.medicinename || "N/A",
+        currentData.dosage || "N/A",
+        currentData.brandname || "N/A",
+        currentData.purchaseprice || "N/A",
 
-        currentData.mrp || "0",
-        currentData.totalqty || "0",
+        currentData.mrp || "N/A",
+        currentData.totalqty || "N/A",
         currentData.expirydate
           ? moment(currentData.expirydate).format("YYYY-MM-DD")
-          : "0",
+          : "N/A",
       ]);
 
       pdf.autoTable({
@@ -403,17 +417,17 @@ const StockDetailsPage = () => {
         const bodyData = currentPageData.map((currentData) => [
           currentData.purchasedate
             ? moment(currentData.purchasedate).format("YYYY-MM-DD")
-            : "0",
-          currentData.medicinename || "0",
-          currentData.dosage || "0",
-          currentData.brandname || "0",
-          currentData.purchaseprice || "0",
+            : "N/A",
+          currentData.medicinename || "N/A",
+          currentData.dosage || "N/A",
+          currentData.brandname || "N/A",
+          currentData.purchaseprice || "N/A",
 
-          currentData.mrp || "0",
-          currentData.totalqty || "0",
+          currentData.mrp || "N/A",
+          currentData.totalqty || "N/A",
           currentData.expirydate
             ? moment(currentData.expirydate).format("YYYY-MM-DD")
-            : "0",
+            : "N/A",
         ]);
 
         pdf.autoTable({
@@ -574,18 +588,19 @@ const StockDetailsPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData.map((item, index) => (
+                      {dataOnCurrentPage.map((item, index) => (
                         <tr key={item.id}>
                           <td style={tdStyle}>
                             {item.purchasedate
                               ? moment(item.purchasedate).format("YYYY-MM-DD")
-                              : "0"}
+                              : "N/A"}
                           </td>
 
                           <td style={{ ...tdStyle, textAlign: "left" }}>
-                            {item.medicinename || "0"}
+                            {item.medicinename || "N/A"}
                           </td>
-                          <td style={tdStyle}>{item.dosage || "0"}</td>
+                          <td style={tdStyle}>{item.dosage || "N/A"}</td>
+
                           <td style={tdStyle}>
                             {editMode === item.id ? (
                               <input
@@ -599,7 +614,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.brandname || "0"
+                              item.brandname || "N/A"
                             )}
                           </td>
                           <td style={tdStyle}>
@@ -615,7 +630,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.purchaseprice || "0"
+                              item.purchaseprice || "N/A"
                             )}
                           </td>
 
@@ -629,7 +644,7 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.mrp || "0"
+                              item.mrp || "N/A"
                             )}
                           </td>
                           <td style={tdStyle}>
@@ -645,27 +660,26 @@ const StockDetailsPage = () => {
                                 }
                               />
                             ) : (
-                              item.totalqty || "0"
+                              item.totalqty || "N/A"
                             )}
                           </td>
                           <td style={tdStyle}>
-                            {editMode === item.id ? (
-                              <input
-                                type="text"
-                                value={editedData.expirydate}
-                                onChange={(e) =>
-                                  handleChangeEditData(
-                                    "expirydate",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : item.expirydate ? (
-                              moment(item.expirydate).format("YYYY-MM-DD")
-                            ) : (
-                              "0"
-                            )}
-                          </td>
+  {editMode === item.id ? (
+    <input
+      type="date"
+      value={editedData.expirydate ? editedData.expirydate.slice(0, 10) : ''}
+      onChange={(e) =>
+        handleChangeEditData("expirydate", e.target.value)
+      }
+    />
+  ) : item.expirydate ? (
+    moment(item.expirydate).format("YYYY-MM-DD")
+  ) : (
+    "N/A"
+  )}
+</td>
+
+
                           <td style={tdStyle}>
                             {isRowEdited(item.id) ? (
                               <span style={{ color: "orange" }}>Edited</span>
