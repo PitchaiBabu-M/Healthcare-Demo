@@ -8,7 +8,7 @@ export default function TimeBtn(props) {
     useEffect(() => {
       const fetchData = async () => {
         try {
-            const response = await axios.get(`https://apidemo.5ytechno.com/api/available-timings?doctor=${doctorname}&date=${selectedDate}`);
+            const response = await axios.get(`https://apidemo.5ytechno.com/available-timings?doctor=${doctorname}&date=${selectedDate}`);
 
           setBookedSlots(response.data);
         } catch (error) {
