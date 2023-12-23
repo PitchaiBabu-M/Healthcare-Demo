@@ -5,7 +5,7 @@ export default function Finalbtn(props) {
 
   const handleYesClick = async () => {
     try {
-      const response = await fetch('https://apidemo.5ytechno.com/api/available-timings/book', {
+      const response = await fetch('https://apidemo.5ytechno.com/available-timings/book', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
