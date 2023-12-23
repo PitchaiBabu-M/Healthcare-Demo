@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.react-chatbot-kit-chat-container {
+  width: 400px;
+}
+
+.react-chatbot-kit-chat-bot-message {
+  margin-left: 10px;
+}
+
+
+
+.ADE {
+  background-color: #AA076B;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: white;
+  border-radius: 100%;
+}
+
+ */

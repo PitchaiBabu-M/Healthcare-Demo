@@ -43,7 +43,7 @@ function Billing() {
     handleTotal();
   }, [medicineRows, discount]);
 
-  const showAlert = (message, type, duration = 3000) => {
+  const showAlert = (message, type, duration = 8000) => {
     setAlert({ message, type });
 
     setTimeout(() => {
@@ -161,7 +161,7 @@ function Billing() {
 
   function handlePatientNameChange(event) {
     const newName = event.target.value;
-    const regex = /^[a-zA-Z]+$/;
+    const regex = /^[a-zA-Z ]+$/;
     setPatientName(newName);
     if (!regex.test(newName)) {
       event.target.value = newName.slice(0, -1);

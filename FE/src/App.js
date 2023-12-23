@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Login from "./components/login";
 import AddMedicine from "./components/addmedicine";
 import Sidebar from "./components/sidebar";
@@ -9,25 +10,26 @@ import Billing from "./components/billing";
 import Purchase from "./components/purchase";
 import BillingHis from "./components/billinghistory";
 import RegistrationForm from "./components/registration";
-import StockDetailsPage1 from "./components/pharmacystock";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import './index.css'
+import ChatApp from "./chatbotAction/chatApp";
+import HomePage from "./components/home";
+
+
+
 
 
 const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={Login} />
-        <Route path="/sidebar" component={Sidebar}/>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/sidebar" component={Sidebar} />
         <Route path="/addmedicine" component={AddMedicine} />
         <Route path="/register" component={RegistrationForm} />
         <Route path="/stock" component={StockDetailsPage} />
-        <Route path="/pharmacystock" component={StockDetailsPage1} />
         <Route path="/billing" component={Billing} />
         <Route path="/purchase" component={Purchase} />
         <Route path="/billinghistory" component={BillingHis} />
+        <Route path="/login" component={Login} />
       </Switch>
     </Router>
   );

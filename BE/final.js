@@ -2,7 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const axios = require("axios");
 const app = express();
-const port = 3000;
+const port = 8000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
@@ -20,10 +20,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 moment.tz.setDefault("Asia/Kolkata");
 
 const db = mysql.createPool({
-  host: "fivewhyrds.ctxjvxl0k0dq.us-east-1.rds.amazonaws.com",
-  user: "fivewhyadmin",
-  password: "Yayaya#143",
-  database: "Alagar_Clinic_Demo",
+  host: "localhost",
+  user: "root",
+  password: "edureka2023*",
+  database: "demo_chabot",
 });
 
 const createUsersTableQuery = `
@@ -90,6 +90,68 @@ CREATE TABLE IF NOT EXISTS Billing_Inventory_Demo (
   createdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
 `;
+
+const createAppointmentsTableQuery = `
+CREATE TABLE IF NOT EXISTS Appointments_Demo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  doctor_name VARCHAR(255) NOT NULL,
+  date DATE NOT NULL,
+  timing VARCHAR(20) NOT NULL,
+  user_name VARCHAR(255) NOT NULL,
+  age INT NOT NULL,
+  mobile VARCHAR(15) NOT NULL,
+  booked BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_appointment UNIQUE(doctor_name, date, timing)
+)
+`;
+
+db.getConnection((connectionError, connection) => {
+  if (connectionError) {
+    console.error("Database connection failed: " + connectionError.stack);
+    return;
+  }
+
+  connection.query(createUsersTableQuery, (error, result) => {
+    if (error) {
+      throw new Error("Error creating User_Inventory_Demo table: " + error.message);
+    }
+    console.log("User_Inventory_Demo table created successfully");
+  });
+
+  connection.query(createBillingTableQuery, (err) => {
+
+    if (err) {
+      console.error("Error creating the table: " + err);
+    } else {
+      console.log("Billing_Inventory_Demo Table created successfully");
+    }
+  });
+
+  connection.query(createPurchaseTableQuery, (err) => {
+    if (err) {
+      console.error("Error creating the table: " + err);
+    } else {
+      console.log("Purchase_Inventory_Demo Table created successfully");
+    }
+  });
+
+  connection.query(createStockTableQuery, (err) => {
+    if (err) {
+      console.error("Error creating the table: " + err);
+    } else {
+      console.log("Stock_Inventory_Demo Table created successfully");
+    }
+  });
+
+  connection.query(createAppointmentsTableQuery, (err) => {
+    if (err) {
+      console.error("Error creating the table: " + err);
+    } else {
+      console.log("Appointments_Demo Table created successfully");
+    }
+  });
+});
 
 const privateKey =
   "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKYCCU+icNr+dlESZOSomuTvi7Sv5HXbV2+RGzNWNGhnQYLGSPYFh3NRZ7HuP3C1M+sI2vX1UGb/AXlucw+pDLQpungBOyyi9zwsyzgBvdeZRFNj3V9tn3CQaEPTXbBFwSszmpPZvdk58L/YCru3G2XPdFNpKnv0Q7yiiiMWIX0wIDAQAB";
@@ -241,44 +303,7 @@ app.use((req, res, next) => {
   next();
 });
 
-db.getConnection((connectionError, connection) => {
-  if (connectionError) {
-    console.error("Database connection failed: " + connectionError.stack);
-    return;
-  }
 
-  connection.query(createUsersTableQuery, (error, result) => {
-    if (error) {
-      throw new Error("Error creating User_Inventory_Demo table: " + error.message);
-    }
-    console.log("User_Inventory_Demo table created successfully");
-  });
-
-  connection.query(createBillingTableQuery, (err) => {
-
-    if (err) {
-      console.error("Error creating the table: " + err);
-    } else {
-      console.log("Billing_Inventory_Demo Table created successfully");
-    }
-  });
-
-  connection.query(createPurchaseTableQuery, (err) => {
-    if (err) {
-      console.error("Error creating the table: " + err);
-    } else {
-      console.log("Purchase_Inventory_Demo Table created successfully");
-    }
-  });
-
-  connection.query(createStockTableQuery, (err) => {
-    if (err) {
-      console.error("Error creating the table: " + err);
-    } else {
-      console.log("Stock_Inventory_Demo Table created successfully");
-    }
-  });
-});
 
 async function generateInvoiceNumber() {
   const currentDate = new Date();
@@ -734,6 +759,84 @@ const extractMedicineInfo = (medData) => {
     return { medicinename: '', dosage: '' }; 
   }
 };
+
+function generateTimeSlots() {
+  const startTime = new Date().setHours(9, 0, 0, 0); 
+  const endTime = new Date().setHours(18, 30, 0, 0); 
+  const timeSlots = [];
+
+  let currentTime = startTime;
+
+  while (currentTime < endTime) {
+    const timeSlotStart = new Date(currentTime);
+    const timeSlotEnd = new Date(currentTime + 15 * 60000); 
+
+    const startTimeString = timeSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const endTimeString = timeSlotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    timeSlots.push(`${startTimeString}-${endTimeString}`);
+    currentTime = currentTime + 15 * 60000;
+  }
+
+  return timeSlots;
+}
+
+async function getAvailableTimings(doctor, date) {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT timing FROM Appointments_Demo WHERE booked = TRUE AND doctor_name = ? AND date = ?"; 
+
+    db.query(sql, [doctor, date], (err, results) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        reject(err);
+      } else {
+        const bookedTimings = results.map(row => row.timing);
+        if (!bookedTimings || bookedTimings.length === 0) {
+          resolve(generateTimeSlots());
+          return;
+        }
+
+        const availableTimings = generateTimeSlots(); 
+        const available = availableTimings.filter(
+          time => !bookedTimings.includes(time)
+        );
+        resolve(available);
+      }
+    });
+  });
+}
+
+app.get('/api/available-timings', async (req, res) => {
+  try {
+    const { doctor, date } = req.query;
+    const available = await getAvailableTimings(doctor, date);
+    res.json(available);
+  } catch (err) {
+    console.error("Query Error:", err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+app.post('/api/available-timings/book', async (req, res) => {
+  const { doctor, date, time, name, age, mobile } = req.body;
+
+  try {
+
+    await db.query(
+      `INSERT INTO Appointments_Demo (doctor_name, date, timing, user_name, age, mobile, booked) VALUES (?, ?, ?, ?, ?, ?, TRUE)`,
+      [doctor, date, time, name, age, mobile ]
+    );
+
+    await db.query(
+      `DELETE FROM Appointments_Demo WHERE date = ? AND timing = ? AND booked = FALSE`, [date, time]
+      );
+
+    res.json({ message: 'Appointment booked successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
