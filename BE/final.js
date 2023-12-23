@@ -806,7 +806,7 @@ async function getAvailableTimings(doctor, date) {
   });
 }
 
-app.get('/api/available-timings', async (req, res) => {
+app.get('/available-timings', async (req, res) => {
   try {
     const { doctor, date } = req.query;
     const available = await getAvailableTimings(doctor, date);
@@ -817,7 +817,7 @@ app.get('/api/available-timings', async (req, res) => {
   }
 });
 
-app.post('/api/available-timings/book', async (req, res) => {
+app.post('/available-timings/book', async (req, res) => {
   const { doctor, date, time, name, age, mobile } = req.body;
 
   try {
