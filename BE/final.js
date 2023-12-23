@@ -2,7 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const axios = require("axios");
 const app = express();
-const port = 8000;
+const port = 3000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
@@ -20,10 +20,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 moment.tz.setDefault("Asia/Kolkata");
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "edureka2023*",
-  database: "demo_chabot",
+  host: "fivewhyrds.ctxjvxl0k0dq.us-east-1.rds.amazonaws.com",
+  user: "fivewhyadmin",
+  password: "Yayaya#143",
+  database: "Alagar_Clinic_Demo",
 });
 
 const createUsersTableQuery = `
