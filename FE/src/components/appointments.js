@@ -15,7 +15,7 @@ export default function Appointments() {
         setSelectedDoctor(selectedValue);
       
         try {
-            const response = await axios.get(`https://apidemo.5ytechno.com/available-timings/${selectedValue}`);
+            const response = await axios.get(`http://localhost:4000/available-timings/${selectedValue}`);
             console.log("response", response.data); 
             setBookedAppointments(response.data);
 
