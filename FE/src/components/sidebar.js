@@ -21,6 +21,7 @@ import Purchase from "./purchase";
 import BillingHis from "./billinghistory";
 import RegistrationForm from "./registration";
 import StockDetailsPage1 from "./pharmacystock";
+import Appointments from "./appointments";
 import { BiChevronUp, BiChevronDown } from "react-icons/bi";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -85,6 +86,7 @@ const Sidebar = () => {
   const [showBillingHis, setShowBillingHis] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showStockDetails1, setShowStockDetails1] = useState(false);
+  const [showAppointments, setShowAppointments] = useState(false);
   const history = useHistory();
 
   const handleRegistrationFormToggle = () => {
@@ -96,6 +98,7 @@ const Sidebar = () => {
       setShowForm(false);
       setShowPurchase(false);
       setShowBillingHis(false);
+      setShowAppointments(false);
     }
   };
   const handleStockDetailsToggle1 = () => {
@@ -108,6 +111,8 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -123,6 +128,8 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -139,6 +146,8 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -151,6 +160,8 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -163,6 +174,8 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -175,6 +188,8 @@ const Sidebar = () => {
       setShowPurchase(true);
       setShowBillingHis(false);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
     }
   };
 
@@ -187,6 +202,22 @@ const Sidebar = () => {
       setShowPurchase(false);
       setShowBillingHis(true);
       setShowRegistrationForm(false);
+      setShowAppointments(false);
+
+    }
+  };
+
+  const handleAppointmentsToggle = () => {
+    if (user && user.user.user_role === "Doctor") {
+      setShowBilling(false);
+      setShowStockDetails(false);
+      setShowAddMedicine(false);
+      setShowForm(false);
+      setShowPurchase(false);
+      setShowBillingHis(false);
+      setShowRegistrationForm(false);
+      setShowAppointments(true);
+
     }
   };
 
@@ -338,6 +369,7 @@ const Sidebar = () => {
                       </li>
                     )}
                     <br />
+
                     {user && user.user.user_role === "Doctor" && (
                       <li className="mb-2">
                         <a
@@ -367,7 +399,9 @@ const Sidebar = () => {
                         </a>
                       </li>
                     )}
+
                     <br />
+
                     {user && user.user.user_role === "Doctor" && (
                       <li className="mb-2">
                         <a
@@ -380,6 +414,25 @@ const Sidebar = () => {
                         </a>
                       </li>
                     )}
+
+                    <br />
+
+                    {user && user.user.user_role === "Doctor" && (
+                      <li className="mb-2">
+                        <a
+                          href="#"
+                          className="text-decoration-none text-dark"
+                          onClick={handleAppointmentsToggle}
+                        >
+                          <FontAwesomeIcon
+                            icon={faFileMedical}
+                            className="me-3"
+                          />
+                          <b>Appointments</b>
+                        </a>
+                      </li>
+                    )}
+
                   </ul>
                 </div>
                 <hr />
@@ -484,6 +537,18 @@ const Sidebar = () => {
                   </div>
                 )}
               </div>
+
+              <div
+                className="stock-details-content"
+                style={{ display: showAppointments ? "block" : "none" }}
+              >
+                {showAppointments && (
+                  <div className="stock-details-content">
+                    <Appointments />
+                  </div>
+                )}
+              </div>
+
             </div>
           </div>
         </div>

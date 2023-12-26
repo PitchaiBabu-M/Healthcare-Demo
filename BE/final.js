@@ -838,6 +838,21 @@ app.post('/available-timings/book', async (req, res) => {
   }
 });
 
+app.get("/available-timings/:doctor", (req, res) => {
+  const { doctor } = req.params;
+  const sql = "SELECT date, timing, user_name, age, mobile FROM Appointments_Demo WHERE doctor_name = ? AND booked = TRUE"; 
+
+  db.query(sql, [doctor], (err, results) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Error fetching data" });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
