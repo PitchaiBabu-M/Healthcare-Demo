@@ -1,4 +1,3 @@
-// in config.js
 import { createChatBotMessage } from 'react-chatbot-kit';
 import AppointBtn from '../chatbot/appointBtn';
 import Doctorbtn from '../chatbot/doctorbtn';
@@ -7,12 +6,12 @@ import TimeBtn from '../chatbot/timebtn';
 import Finalbtn from '../chatbot/finalbtn';
 
 const config = {
-
   initialMessages: [
     createChatBotMessage(`Welcome to Alagar Clinic!`),
     createChatBotMessage(`Do you need Doctor Appointment ?`, {
-      widget: "YesorNo"
-    })
+      widget: "YesorNo",
+    }),
+
   ], 
   botName: 'Alagar Clinic',
   customStyles: {
@@ -57,8 +56,6 @@ const config = {
       widgetFunc: (props) => <Finalbtn {...props}/>
     },
   ],
-  
-  
 };
 
 export default config;

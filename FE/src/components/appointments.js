@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
@@ -44,8 +44,8 @@ export default function Appointments() {
                 localizer={localizer}
                 events={bookedAppointments.map(appointment => ({
                     title: `${appointment.user_name}'s appointment`,
-                    start: moment(`${appointment.date} ${appointment.timing}`, 'YYYY-MM-DD HH:mm').toDate(),
-                    end: moment(`${appointment.date} ${appointment.timing}`, 'YYYY-MM-DD HH:mm').add(15, 'minutes').toDate(), 
+                    start: moment(`${appointment.date} ${appointment.timing}`, 'YYYY-MM-DD hh:mm A').toDate(),
+                    end: moment(`${appointment.date} ${appointment.timing}`, 'YYYY-MM-DD hh:mm A').add(15, 'minutes').toDate(), 
                 }))}
                 startAccessor="start"
                 endAccessor="end"

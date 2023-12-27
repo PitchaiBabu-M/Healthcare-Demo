@@ -2,9 +2,9 @@ import React from 'react';
 
 const MessageParser = ({ children, actions }) => {
 
-  const {checker} = children.props.state;
+  const { checker } = children.props.state;
+
   const parse = (message) => {
-    
     if (checker === "doctor") {
       actions.yesAction();
     }
@@ -19,12 +19,25 @@ const MessageParser = ({ children, actions }) => {
     }
     if (checker === "age") {
       actions.ageaction();
-      children.props.state.userData.username = message
-      console.log ("message", message)
+      // Update the state correctly using the setState function
+      children.props.setState(prevState => ({
+        ...prevState,
+        userData: {
+          ...prevState.userData,
+          username: message
+        }
+      }));
     }
     if (checker === "number") {
       actions.numberaction();
-      children.props.state.userData.age = message
+      // Update the state correctly using the setState function
+      children.props.setState(prevState => ({
+        ...prevState,
+        userData: {
+          ...prevState.userData,
+          age: message
+        }
+      }));
     }
     if (checker === "final") {
       actions.finalaction(
@@ -33,9 +46,15 @@ const MessageParser = ({ children, actions }) => {
         children.props.state.userData.selectedDate,
         children.props.state.userData.selectedTime
       );
-      children.props.state.userData.mobileno = message
+      // Update the state correctly using the setState function
+      children.props.setState(prevState => ({
+        ...prevState,
+        userData: {
+          ...prevState.userData,
+          mobileno: message
+        }
+      }));
     }
-
   };
 
   return (
