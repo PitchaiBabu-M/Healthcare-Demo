@@ -9,6 +9,8 @@ import ExcelJS from "exceljs";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "../styles/stock.css";
+import config from "../config";
+
 
 const Purchase = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,7 +56,7 @@ const Purchase = () => {
 
   const fetchpurchaseData = async () => {
     try {
-      const response = await axios.get("https://apidemo.5ytechno.com/allpurchase", {
+      const response = await axios.get( `${config.apiUrl}/allpurchase`, {
         params: { medicinename: searchQuery },
       });
 
@@ -77,7 +79,7 @@ const Purchase = () => {
     const fetchpurchaseData = async () => {
       try {
         const response = await axios.get(
-          "https://apidemo.5ytechno.com/allpurchase"
+          `${config.apiUrl}/allpurchase`
         );
         setMedicineData(response.data);
       } catch (error) {

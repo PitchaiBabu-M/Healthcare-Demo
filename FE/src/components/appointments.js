@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import config from "../config";
+
 
 const localizer = momentLocalizer(moment);
 
@@ -15,7 +17,7 @@ export default function Appointments() {
         setSelectedDoctor(selectedValue);
       
         try {
-            const response = await axios.get(`https://apidemo.5ytechno.com/available-timings/${selectedValue}`);
+            const response = await axios.get( `${config.apiUrl}/available-timings/${selectedValue}`);
             console.log("response", response.data); 
             setBookedAppointments(response.data);
 

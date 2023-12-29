@@ -9,6 +9,8 @@ import ExcelJS from "exceljs";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "../styles/stock.css";
+import config from "../config";
+
 
 const StockDetailsPage1 = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,7 +42,7 @@ const StockDetailsPage1 = () => {
 
   const fetchStockData = async () => {
     try {
-      const response = await axios.get("https://apidemo.5ytechno.com/stock", {
+      const response = await axios.get( `${config.apiUrl}/stock`, {
         params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 

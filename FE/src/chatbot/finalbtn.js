@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import config from "../config";
+
+
 
 export default function Finalbtn(props) {
   const [choiceMade, setChoiceMade] = useState(false);
@@ -9,7 +12,7 @@ export default function Finalbtn(props) {
     if (!choiceMade) {
       setChoiceMade(true);
       try {
-        const response = await fetch('https://apidemo.5ytechno.com/available-timings/book', {
+        const response = await fetch( `${config.apiUrl}/available-timings/book`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

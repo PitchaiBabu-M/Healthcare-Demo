@@ -19,6 +19,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 moment.tz.setDefault("Asia/Kolkata");
 
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "edureka2023*",
+//   database: "demo_chabot",
+// });
+
 const db = mysql.createPool({
   host: "fivewhyrds.ctxjvxl0k0dq.us-east-1.rds.amazonaws.com",
   user: "fivewhyadmin",

@@ -19,7 +19,6 @@ const MessageParser = ({ children, actions }) => {
     }
     if (checker === "age") {
       actions.ageaction();
-      // Update the state correctly using the setState function
       children.props.setState(prevState => ({
         ...prevState,
         userData: {
@@ -30,7 +29,6 @@ const MessageParser = ({ children, actions }) => {
     }
     if (checker === "number") {
       actions.numberaction();
-      // Update the state correctly using the setState function
       children.props.setState(prevState => ({
         ...prevState,
         userData: {
@@ -46,7 +44,6 @@ const MessageParser = ({ children, actions }) => {
         children.props.state.userData.selectedDate,
         children.props.state.userData.selectedTime
       );
-      // Update the state correctly using the setState function
       children.props.setState(prevState => ({
         ...prevState,
         userData: {

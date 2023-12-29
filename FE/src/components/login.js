@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import logoImage from "../logo/logo.jpg";
+import config from "../config";
+
 
 const Login = () => {
   const history = useHistory();
@@ -23,7 +25,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://apidemo.5ytechno.com/login",
+        `${config.apiUrl}/login`,
         loginData
       );
       console.log(response.data);

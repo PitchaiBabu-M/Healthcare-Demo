@@ -23,20 +23,13 @@ const HomePage = () => {
 </div>
       </div>
 
-      <div className="d-none d-lg-block"> {/* Hide on mobile and small tablets */}
+      <div className=""> {/* Hide on mobile and small tablets */}
   <div className="position-absolute bottom-0 end-0 mb-4 me-4">
     <ChatApp />
   </div>
 </div>
 
-      <div className="d-md-none">
-        <div
-          className="position-absolute bottom-0 end-0 mb-4 me-4"
-          style={{ height: '80vh' }}
-        >
-          <ChatApp />
-        </div>
-      </div>
+     
     </div>
   );
 };

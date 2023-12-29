@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const [executedActions, setExecutedActions] = useState({
@@ -11,6 +11,46 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     no: false,
     thankyou: false,
   });
+
+  const [currentAction, setCurrentAction] = useState(null);
+  const [inputvalue, setInputvalue] = useState('');
+
+
+  useEffect(() => {
+    const inputElement = document.querySelector('.react-chatbot-kit-chat-input');
+    if (inputElement) {
+      inputElement.addEventListener('input', handleInput);
+    }
+    
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('input', handleInput);
+        inputElement.value = inputvalue;
+      }
+    };
+  }, [currentAction]);
+
+  const handleInput = (e) => {
+    const updatedvalue = e.target.value;
+
+    switch (currentAction) {
+      case 'name':
+        e.target.value = updatedvalue.replace(/[^a-zA-Z. ]/g, '')
+
+        break;
+      case 'age':
+        e.target.value = updatedvalue.replace(/[^0-9]/g, '').substring(0, 2);
+
+        break;
+      case 'number':
+        e.target.value = updatedvalue.replace(/[^0-9]/g, '').substring(0, 10);
+
+        break;
+      default:
+        break;
+    }
+  };
+
 
   const disableChatInput = () => {
     const chatInputContainer = document.getElementsByClassName('react-chatbot-kit-chat-input-container')[0];
@@ -67,7 +107,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 
   const noAction = () => {
     if (!executedActions.doctor) {
-      const message = createChatBotMessage('How can I help you ?')
+      const message = createChatBotMessage('If any enquiry contact 8807262725 or 0452-4051228 !')
       updateState(message);
       updateExecutedActions();
     }
@@ -98,6 +138,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 
   const nameaction = (selectedTime) => {
     if (!executedActions.age) {
+      setCurrentAction('name');
       const message = createChatBotMessage('Your Name ?');
       updateState(message, 'age', null, null, selectedTime);
       updateExecutedActions('age');
@@ -107,6 +148,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 
   const ageaction = () => {
     if (!executedActions.number) {
+      setCurrentAction('age');
       const message = createChatBotMessage('Your Age ?');
       updateState(message, 'number');
       updateExecutedActions('number');
@@ -114,13 +156,13 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }
   };
 
-
   const numberaction = () => {
+    setCurrentAction('number');
     const message = createChatBotMessage('Your Mobile Number ?', {});
     updateState(message, 'final');
     enableChatInput();
-  };
 
+  };
 
   const finalaction = (username, doctorname, selectedDate, selectedTime) => {
 
@@ -140,6 +182,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   }
 
   const updateState = (message, checker, doctorname = null, selectedDate = null, selectedTime = null) => {
+    
     setState((prev) => ({
       ...prev,
       messages: [...prev.messages, message],
@@ -150,10 +193,13 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
         selectedDate: selectedDate !== null ? selectedDate : prev.userData.selectedDate,
         selectedTime: selectedTime !== null ? selectedTime : prev.userData.selectedTime,
       },
-
-
     }));
   };
+
+  useEffect(() => {
+    disableChatInput();
+    return () => enableChatInput();
+  }, []);
 
   return (
     <div>

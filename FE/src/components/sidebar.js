@@ -24,6 +24,8 @@ import StockDetailsPage1 from "./pharmacystock";
 import Appointments from "./appointments";
 import { BiChevronUp, BiChevronDown } from "react-icons/bi";
 import "bootstrap/dist/css/bootstrap.min.css";
+import config from "../config";
+
 
 const UserProfile = ({ user, onLogout }) => {
   const history = useHistory();

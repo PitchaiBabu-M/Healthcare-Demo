@@ -8,6 +8,8 @@ import {
   faSearch,
   faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
+import config from "../config";
+
 
 import { DatePicker } from "antd";
 import moment from "moment";
@@ -53,7 +55,7 @@ const StockDetailsPage = () => {
 
   const fetchStockData = async () => {
     try {
-        const response = await axios.get("https://apidemo.5ytechno.com/stock", {
+        const response = await axios.get( `${config.apiUrl}/stock`, {
               params: { medicinename: searchQuery, fromExpiryDate, toExpiryDate },
       });
 
@@ -79,7 +81,7 @@ const StockDetailsPage = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await axios.get("https://apidemo.5ytechno.com/stock");
+        const response = await axios.get( `${config.apiUrl}/stock`);
         setMedicineData(response.data);
       } catch (error) {
         setError("Error fetching data");
@@ -122,7 +124,7 @@ const StockDetailsPage = () => {
     try {
 
       const response = await axios.put(
-        `https://apidemo.5ytechno.com/stock/update/${id}`,
+        `${config.apiUrl}/stock/update/${id}`,
         updatedData
       );
 
@@ -152,7 +154,7 @@ const StockDetailsPage = () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         const response = await axios.delete(
-          `https://apidemo.5ytechno.com/stock/delete/${id}`
+          `${config.apiUrl}/stock/delete/${id}`
         );
         console.log("Delete response:", response.data);
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import config from "../config";
+
 
 export default function TimeBtn(props) {
    const {doctorname, selectedDate} = props.state.userData
@@ -8,7 +10,7 @@ export default function TimeBtn(props) {
     useEffect(() => {
       const fetchData = async () => {
         try {
-            const response = await axios.get(`https://apidemo.5ytechno.com/available-timings?doctor=${doctorname}&date=${selectedDate}`);
+            const response = await axios.get( `${config.apiUrl}/available-timings?doctor=${doctorname}&date=${selectedDate}`);
 
           setBookedSlots(response.data);
         } catch (error) {

@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import config from "../config";
 
 function AddMedicine() {
   const [formData, setFormData] = useState({
@@ -172,7 +173,9 @@ function AddMedicine() {
     }
 
     try {
-      await axios.post("https://apidemo.5ytechno.com/purchase", formData);
+      await axios.post(
+        `${config.apiUrl}purchase`,
+         formData);
       setPopupType("success");
       setShowPopup(true);
       console.log("Form Submitted!");

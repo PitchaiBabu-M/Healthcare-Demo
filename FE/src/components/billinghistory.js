@@ -9,6 +9,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "../styles/stock.css";
 import billbg from "../logo/newtemplate.jpg";
+import config from "../config";
+
 
 const BillingHis = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,7 +45,7 @@ const BillingHis = () => {
   const fetchbillingData = async () => {
     try {
       const response = await axios.get(
-        "https://apidemo.5ytechno.com/billingdata"
+        `${config.apiUrl}/billingdata`
       );
       setMedicineData(response.data);
     } catch (error) {
@@ -89,7 +91,7 @@ const BillingHis = () => {
   const View = async (invoiceNumber) => {
     try {
       const response = await axios.get(
-        `https://apidemo.5ytechno.com/billingdata/${invoiceNumber}`
+        `${config.apiUrl}/billingdata/${invoiceNumber}`
       );
       const invoiceData = response.data;
       setInvoiceData(invoiceData);

@@ -3,6 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import config from "../config";
 
 const RegistrationForm = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,7 +58,7 @@ const RegistrationForm = () => {
 
     try {
       const checkEmailResponse = await axios.get(
-        `https://apidemo.5ytechno.com/check-email?email=${formData.user_email}`
+        `${config.apiUrl}/check-email?email=${formData.user_email}`
       );
 
       if (checkEmailResponse.data.status === 400) {
@@ -77,7 +78,7 @@ const RegistrationForm = () => {
       }
 
       const response = await axios.post(
-        "https://apidemo.5ytechno.com/register",
+        `${config.apiUrl}/register`,
         formDataToSend,
         {
           headers: {

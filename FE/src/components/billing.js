@@ -10,6 +10,8 @@ import "../styles/stock.css";
 import FloatingAlert from "./floatingalert";
 import "../styles/billing.css";
 import { useReactToPrint } from "react-to-print";
+import config from "../config";
+
 
 function Billing() {
   const [medicineRows, setMedicineRows] = useState(
@@ -115,7 +117,7 @@ function Billing() {
 
     try {
       const response = await axios.get(
-        `https://apidemo.5ytechno.com/quantity?medicinename=${medicinename}&dosage=${dosage}`
+        `${config.apiUrl}/quantity?medicinename=${medicinename}&dosage=${dosage}`
       );
       const availableQuantity = response.data.availableQuantity;
 
@@ -199,7 +201,7 @@ function Billing() {
     try {
       const { medicinename, dosage } = extractMedicineInfo(selectedSuggestion);
       const mrpResponse = await axios.get(
-        `https://apidemo.5ytechno.com/getMRP?medicinename=${medicinename}&dosage=${dosage}`
+        `${config.apiUrl}/getMRP?medicinename=${medicinename}&dosage=${dosage}`
       );
       const mrp = mrpResponse.data.mrp;
       console.log("mrp", mrp);
@@ -223,7 +225,7 @@ function Billing() {
 
     try {
       const response = await axios.get(
-        `https://apidemo.5ytechno.com/suggestions?partialName=${inputValue}`
+        `${config.apiUrl}/suggestions?partialName=${inputValue}`
       );
       const fetchedSuggestions = response.data.suggestions;
       setSuggestions(fetchedSuggestions);
@@ -250,7 +252,7 @@ function Billing() {
         if (event.target.id === `medicinename${id}`) {
           try {
             const response = await axios.get(
-              `https://apidemo.5ytechno.com/allstock?medicinename=${medicinename}&dosage=${dosage}`
+              `${config.apiUrl}/allstock?medicinename=${medicinename}&dosage=${dosage}`
             );
             const expired = response.data.expired;
 
@@ -483,7 +485,7 @@ function Billing() {
 
     try {
       const response = await axios.post(
-        "https://apidemo.5ytechno.com/billing",
+        `${config.apiUrl}/billing`,
         billingData
       );
       const generatedInvoiceNumber = response.data.invoicenumber;
