@@ -13,44 +13,67 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   });
 
   const [currentAction, setCurrentAction] = useState(null);
-  const [inputvalue, setInputvalue] = useState('');
-
 
   useEffect(() => {
-    const inputElement = document.querySelector('.react-chatbot-kit-chat-input');
-    if (inputElement) {
-      inputElement.addEventListener('input', handleInput);
+    const chatInputContainer = document.querySelector('.react-chatbot-kit-chat-input-container');
+    const buttonElement = chatInputContainer.querySelector("button")
+ 
+    if (!chatInputContainer) {
+        console.error('Chat input container not found');
+        return;
     }
-    
-    return () => {
-      if (inputElement) {
-        inputElement.removeEventListener('input', handleInput);
-        inputElement.value = inputvalue;
-      }
-    };
-  }, [currentAction]);
 
-  const handleInput = (e) => {
-    const updatedvalue = e.target.value;
+    const inputElement = chatInputContainer.querySelector('input');
+    if (!inputElement) {
+        console.error('Input element not found');
+        return;
+    }
 
-    switch (currentAction) {
-      case 'name':
-        e.target.value = updatedvalue.replace(/[^a-zA-Z. ]/g, '')
+    const handleKeyDown = (e) => {
+      const value = e.target.value;
+  
+      if (currentAction === 'name') {
+          if (!/^[a-zA-Z .]*$/.test(e.key) && e.key !== 'Backspace') {
+              e.preventDefault();
+          }
+      } else if (currentAction === 'age') {
+          if (!/^[0-9]*$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Enter') {
+            e.preventDefault();
+        }
+        if (value.length >= 2 && e.key !== 'Backspace' && e.key !== 'Enter') {
+            e.preventDefault();
+        }
+      } else if (currentAction === 'number') {
+       
+        if (!/^[0-9]*$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Enter') {
+            e.preventDefault();
+        }
+        if (value.length >= 10 && e.key !== 'Backspace' && e.key !== 'Enter') {
+            e.preventDefault();
+        }
+        if (e.key === 'Enter' && value.length < 10) {
+            e.preventDefault();
+        }
 
-        break;
-      case 'age':
-        e.target.value = updatedvalue.replace(/[^0-9]/g, '').substring(0, 2);
-
-        break;
-      case 'number':
-        e.target.value = updatedvalue.replace(/[^0-9]/g, '').substring(0, 10);
-
-        break;
-      default:
-        break;
+        const sendButton = chatInputContainer.querySelector("button");
+        if (sendButton) {
+          if (value.length < 10) {
+            sendButton.disabled = true; 
+          } else {
+            sendButton.disabled = false; 
+          }
+        }
+      
     }
   };
+  
+    inputElement.addEventListener('keydown', handleKeyDown);
 
+    return () => {
+        inputElement.removeEventListener('keydown', handleKeyDown);
+    };
+
+}, [currentAction]);
 
   const disableChatInput = () => {
     const chatInputContainer = document.getElementsByClassName('react-chatbot-kit-chat-input-container')[0];
@@ -63,7 +86,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       }
     }
   };
-
+ 
   const enableChatInput = () => {
     const chatInputContainer = document.getElementsByClassName('react-chatbot-kit-chat-input-container')[0];
     if (chatInputContainer) {
@@ -110,6 +133,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       const message = createChatBotMessage('If any enquiry contact 8807262725 or 0452-4051228 !')
       updateState(message);
       updateExecutedActions();
+      disableChatInput();
     }
   };
 
@@ -174,11 +198,13 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
         widget: "Final"
       })
     updateState(message, "thankyou");
+    disableChatInput()
   }
 
   const thankyouAction = () => {
     const message = createChatBotMessage('Thankyou for booking !')
     updateState(message);
+    disableChatInput()
   }
 
   const updateState = (message, checker, doctorname = null, selectedDate = null, selectedTime = null) => {

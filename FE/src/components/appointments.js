@@ -5,7 +5,6 @@ import moment from 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import config from "../config";
 
-
 const localizer = momentLocalizer(moment);
 
 export default function Appointments() {
@@ -35,7 +34,6 @@ export default function Appointments() {
                 className="form-select mb-3 w-25"
                 value={selectedDoctor}
                 onChange={handleDoctorChange}
-
             >
                 <option value="">Select a doctor</option>
                 <option value="Dr.JothiPriya">Dr.JothiPriya</option>
