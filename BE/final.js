@@ -1,4 +1,5 @@
 const express = require("express");
+
 const mysql = require("mysql");
 const axios = require("axios");
 const app = express();
@@ -24,6 +25,8 @@ const db = mysql.createPool({
   user: "fivewhyadmin",
   password: "Yayaya#143",
   database: "Alagar_Clinic_Demo",
+  timezone: '+05:30', 
+
 });
 
 const createUsersTableQuery = `
@@ -112,14 +115,14 @@ db.getConnection((connectionError, connection) => {
     return;
   }
 
-  connection.query(createUsersTableQuery, (error, result) => {
+  connection.query(createUsersTableQuery, 'SET user_timestamp = "+05:30"', (error, result) => {
     if (error) {
       throw new Error("Error creating User_Inventory_Demo table: " + error.message);
     }
     console.log("User_Inventory_Demo table created successfully");
   });
 
-  connection.query(createBillingTableQuery, (err) => {
+  connection.query(createBillingTableQuery, 'SET createdate = "+05:30"', (err) => {
 
     if (err) {
       console.error("Error creating the table: " + err);
@@ -128,7 +131,7 @@ db.getConnection((connectionError, connection) => {
     }
   });
 
-  connection.query(createPurchaseTableQuery, (err) => {
+  connection.query(createPurchaseTableQuery, 'SET time = "+05:30"', (err) => {
     if (err) {
       console.error("Error creating the table: " + err);
     } else {
@@ -136,7 +139,7 @@ db.getConnection((connectionError, connection) => {
     }
   });
 
-  connection.query(createStockTableQuery, (err) => {
+  connection.query(createStockTableQuery, 'SET time = "+05:30"', (err) => {
     if (err) {
       console.error("Error creating the table: " + err);
     } else {
@@ -144,7 +147,7 @@ db.getConnection((connectionError, connection) => {
     }
   });
 
-  connection.query(createAppointmentsTableQuery, (err) => {
+  connection.query(createAppointmentsTableQuery, 'SET created_at = "+05:30"', (err) => {
     if (err) {
       console.error("Error creating the table: " + err);
     } else {
@@ -156,97 +159,97 @@ db.getConnection((connectionError, connection) => {
 const privateKey =
   "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKYCCU+icNr+dlESZOSomuTvi7Sv5HXbV2+RGzNWNGhnQYLGSPYFh3NRZ7HuP3C1M+sI2vX1UGb/AXlucw+pDLQpungBOyyi9zwsyzgBvdeZRFNj3V9tn3CQaEPTXbBFwSszmpPZvdk58L/YCru3G2XPdFNpKnv0Q7yiiiMWIX0wIDAQAB";
 
-  app.post("/register", async (req, res) => {
-    try {
-      const reqData = req.body;
-      console.log("Received data:", reqData);
-  
-      if (!reqData ||Object.keys(reqData).length === 0) {
-        throw new Error("Please provide data.");
-      }
-  
-      const existingEmailQuery =
-        "SELECT COUNT(*) as count FROM User_Inventory_Demo WHERE user_email = ?";
-      db.query(existingEmailQuery, [reqData.user_email], async (error, results) => {
-        if (error) {
-          throw new Error("Database error: " + error.message);
-        }
-        if (results[0].count > 0) {
-          return res.status(400).json({
-            status: 400,
-            message: "Email already exists.",
-            error: true,
-          }); 
-        }
-  
-        const enpPassword = await bcrypt.hash(reqData.user_password, 10);
-        const token = jwt.sign(reqData, privateKey);
-        const user = "userid-" + uuid();
-        console.log("User ID length:", user.length);
+app.post("/register", async (req, res) => {
+  try {
+    const reqData = req.body;
+    console.log("Received data:", reqData);
 
-        const istTimestamp = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-  
-        const insertUserQuery = `
+    if (!reqData || Object.keys(reqData).length === 0) {
+      throw new Error("Please provide data.");
+    }
+
+    const existingEmailQuery =
+      "SELECT COUNT(*) as count FROM User_Inventory_Demo WHERE user_email = ?";
+    db.query(existingEmailQuery, [reqData.user_email], async (error, results) => {
+      if (error) {
+        throw new Error("Database error: " + error.message);
+      }
+      if (results[0].count > 0) {
+        return res.status(400).json({
+          status: 400,
+          message: "Email already exists.",
+          error: true,
+        });
+      }
+
+      const enpPassword = await bcrypt.hash(reqData.user_password, 10);
+      const token = jwt.sign(reqData, privateKey);
+      const user = "userid-" + uuid();
+      console.log("User ID length:", user.length);
+
+      const istTimestamp = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+      const insertUserQuery = `
           INSERT INTO User_Inventory_Demo (user_id, user_first_name, user_last_name, user_email, user_mobile_number, user_role, user_password, user_token, user_timestamp)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-  
-        const values = [
-          user,
-          reqData.user_first_name,
-          reqData.user_last_name,
-          reqData.user_email,
-          reqData.user_mobile_number,
-          reqData.user_role,
-          enpPassword,
-          token,
-          istTimestamp
-        ];
-  
-        db.query(insertUserQuery, values, (error, result) => {
-          if (error) {
-            throw new Error("Error inserting user: " + error.message);
-          }
-  
-          res.status(200).json({
-            status: 200,
-            data: result,
-            message: "User added successfully",
-            error: false,
-          });
+
+      const values = [
+        user,
+        reqData.user_first_name,
+        reqData.user_last_name,
+        reqData.user_email,
+        reqData.user_mobile_number,
+        reqData.user_role,
+        enpPassword,
+        token,
+        istTimestamp
+      ];
+
+      db.query(insertUserQuery, values, (error, result) => {
+        if (error) {
+          throw new Error("Error inserting user: " + error.message);
+        }
+
+        res.status(200).json({
+          status: 200,
+          data: result,
+          message: "User added successfully",
+          error: false,
         });
       });
-  
-    } catch (error) {
-      console.error("Error during registration:", error);
-      res.status(500).json({ status: 500, message: "Internal server error.", error: true });
-    }
-  });
-  
-  app.get("/check-email", async (req, res) => {
-    try {
-      const userEmail = req.query.email;
-  
-      const existingEmailQuery =
-        "SELECT COUNT(*) as count FROM User_Inventory_Demo WHERE user_email = ?";
-        
-      db.query(existingEmailQuery, [userEmail], (error, results) => {
-        if (error) {
-          return res.status(500).json({ status: 500, message: "Database error", error: true });
-        }
-  
-        if (results[0].count > 0) {
-          // Email exists
-          return res.status(200).json({ status: 400, message: "Email already exists", error: true });
-        } else {
-          // Email does not exist
-          return res.status(200).json({ status: 200, message: "Email available", error: false });
-        }
-      });
-    } catch (error) {
-      return res.status(500).json({ status: 500, message: error.message, error: true });
-    }
-  });
+    });
+
+  } catch (error) {
+    console.error("Error during registration:", error);
+    res.status(500).json({ status: 500, message: "Internal server error.", error: true });
+  }
+});
+
+app.get("/check-email", async (req, res) => {
+  try {
+    const userEmail = req.query.email;
+
+    const existingEmailQuery =
+      "SELECT COUNT(*) as count FROM User_Inventory_Demo WHERE user_email = ?";
+
+    db.query(existingEmailQuery, [userEmail], (error, results) => {
+      if (error) {
+        return res.status(500).json({ status: 500, message: "Database error", error: true });
+      }
+
+      if (results[0].count > 0) {
+        // Email exists
+        return res.status(200).json({ status: 400, message: "Email already exists", error: true });
+      } else {
+        // Email does not exist
+        return res.status(200).json({ status: 200, message: "Email available", error: false });
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ status: 500, message: error.message, error: true });
+  }
+});
 
 app.post("/login", async (req, res) => {
   try {
@@ -307,9 +310,9 @@ app.use((req, res, next) => {
 
 async function generateInvoiceNumber() {
   const currentDate = new Date();
-  const year = currentDate.getFullYear().toString().slice(2); 
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); 
-  const day = String(currentDate.getDate()).padStart(2, "0"); 
+  const year = currentDate.getFullYear().toString().slice(2);
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const day = String(currentDate.getDate()).padStart(2, "0");
 
   const getLastInvoiceNumberQuery =
     "SELECT MAX(CAST(SUBSTRING(invoice_number, 7) AS UNSIGNED)) as lastInvoiceNumber FROM Billing_Inventory_Demo";
@@ -401,7 +404,7 @@ app.post("/billing", async (req, res) => {
 });
 
 app.get("/billingdata", (req, res) => {
-  const sql = "SELECT * FROM `Billing_Inventory_Demo`"; 
+  const sql = "SELECT * FROM `Billing_Inventory_Demo`";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching data:", err);
@@ -435,11 +438,11 @@ app.get("/allstock", (req, res) => {
     }
 
     const expiryDateString = results[0].expirydate;
-    const expiryDate = new Date(expiryDateString +'Z' );
+    const expiryDate = new Date(expiryDateString + 'Z');
     const currentDate = new Date();
 
     if (expiryDate <= currentDate) {
-      res.json({ expired: expiryDate.toISOString().split("T")[0]});
+      res.json({ expired: expiryDate.toISOString().split("T")[0] });
     } else {
       res.json({ expired: false });
     }
@@ -459,7 +462,7 @@ app.get("/stock", (req, res) => {
 });
 
 app.delete("/stock/delete/:id", (req, res) => {
-  const id = req.params.id;  
+  const id = req.params.id;
 
   console.log("The value of Id is:", id);
 
@@ -592,7 +595,7 @@ app.post("/purchase", (req, res) => {
               mrp,
               medicinename,
               dosage,
-             
+
             ];
 
             db.query(
@@ -730,8 +733,8 @@ app.get("/suggestions", (req, res) => {
 });
 
 app.get("/billingdata/:invoice_number", (req, res) => {
-  const { invoice_number } = req.params; 
-  const sql = "SELECT * FROM `Billing_Inventory_Demo` WHERE invoice_number = ?"; 
+  const { invoice_number } = req.params;
+  const sql = "SELECT * FROM `Billing_Inventory_Demo` WHERE invoice_number = ?";
 
   db.query(sql, [invoice_number], (err, results) => {
     if (err) {
@@ -749,27 +752,27 @@ const extractMedicineInfo = (medData) => {
   }
 
   const lastSpaceIndex = medData.lastIndexOf(' ');
-  
+
   if (lastSpaceIndex !== -1) {
     const dosage = medData.substring(lastSpaceIndex + 1).trim();
     const medicinename = medData.substring(0, lastSpaceIndex);
-    
+
     return { medicinename, dosage };
   } else {
-    return { medicinename: '', dosage: '' }; 
+    return { medicinename: '', dosage: '' };
   }
 };
 
 function generateTimeSlots() {
-  const startTime = new Date().setHours(9, 0, 0, 0); 
-  const endTime = new Date().setHours(18, 30, 0, 0); 
+  const startTime = new Date().setHours(9, 0, 0, 0);
+  const endTime = new Date().setHours(18, 30, 0, 0);
   const timeSlots = [];
 
   let currentTime = startTime;
 
   while (currentTime < endTime) {
     const timeSlotStart = new Date(currentTime);
-    const timeSlotEnd = new Date(currentTime + 15 * 60000); 
+    const timeSlotEnd = new Date(currentTime + 15 * 60000);
 
     const startTimeString = timeSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const endTimeString = timeSlotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -783,7 +786,7 @@ function generateTimeSlots() {
 
 async function getAvailableTimings(doctor, date) {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT timing FROM Appointments_Demo WHERE booked = TRUE AND doctor_name = ? AND date = ?"; 
+    const sql = "SELECT timing FROM Appointments_Demo WHERE booked = TRUE AND doctor_name = ? AND date = ?";
 
     db.query(sql, [doctor, date], (err, results) => {
       if (err) {
@@ -796,7 +799,7 @@ async function getAvailableTimings(doctor, date) {
           return;
         }
 
-        const availableTimings = generateTimeSlots(); 
+        const availableTimings = generateTimeSlots();
         const available = availableTimings.filter(
           time => !bookedTimings.includes(time)
         );
@@ -824,12 +827,12 @@ app.post('/available-timings/book', async (req, res) => {
 
     await db.query(
       `INSERT INTO Appointments_Demo (doctor_name, date, timing, user_name, age, mobile, booked) VALUES (?, ?, ?, ?, ?, ?, TRUE)`,
-      [doctor, date, time, name, age, mobile ]
+      [doctor, date, time, name, age, mobile]
     );
 
     await db.query(
       `DELETE FROM Appointments_Demo WHERE date = ? AND timing = ? AND booked = FALSE`, [date, time]
-      );
+    );
 
     res.json({ message: 'Appointment booked successfully' });
   } catch (err) {
@@ -840,7 +843,7 @@ app.post('/available-timings/book', async (req, res) => {
 
 app.get("/available-timings/:doctor", (req, res) => {
   const { doctor } = req.params;
-  const sql = "SELECT date, timing, user_name, age, mobile FROM Appointments_Demo WHERE doctor_name = ? AND booked = TRUE"; 
+  const sql = "SELECT date, timing, user_name, age, mobile FROM Appointments_Demo WHERE doctor_name = ? AND booked = TRUE";
 
   db.query(sql, [doctor], (err, results) => {
     if (err) {
@@ -848,10 +851,16 @@ app.get("/available-timings/:doctor", (req, res) => {
       res.status(500).json({ error: "Error fetching data" });
       return;
     }
-    res.json(results);
+    const formattedResults = results.map(result => {
+      return {
+        ...result,
+        date: moment(result.date).format(),
+      };
+    });
+
+    res.json(formattedResults);
   });
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

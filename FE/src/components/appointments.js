@@ -10,7 +10,7 @@ const localizer = momentLocalizer(moment);
 export default function Appointments() {
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [bookedAppointments, setBookedAppointments] = useState([]);
-
+   
     const handleDoctorChange = async (e) => {
         const selectedValue = e.target.value;
         setSelectedDoctor(selectedValue);
@@ -53,8 +53,10 @@ export default function Appointments() {
                 timeslots={1} 
                 min={moment().set({ hour: 9, minute: 0 }).toDate()}
                 max={moment().set({ hour: 18, minute: 30 }).toDate()} 
-                step={15} 
+                step={15}  
             />
         </div>
     );
 }
+
+

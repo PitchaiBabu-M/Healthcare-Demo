@@ -19,7 +19,8 @@ export default function AppointBtn(props) {
 
   return (
     <div>
-      <button className='yes-btn' onClick={yesAction} >
+      <button className='yes-btn' onClick={yesAction} 
+      >
         Yes
       </button>
       <button className='no-btn' onClick={noAction} >
